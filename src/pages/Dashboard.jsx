@@ -1,140 +1,88 @@
 import React from 'react';
 import { Typography, Paper, Grid, Box, LinearProgress, IconButton, Avatar } from '@mui/material';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-} from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
-// Mock data for demonstration, from your snippets and image
+// Mock data for mood tracking features
 const userData = {
   name: 'Skylar Dias',
-  profilePic: 'https://i.pravatar.cc/150?u=a042581f4e29026704d', // Placeholder image
+  profilePic: 'https://i.pravatar.cc/150?u=a042581f4e29026704d',
 };
 
-const runningTask = {
-  total: 100,
-  completed: 65,
-};
-
-const activityData = [
-  { name: 'S', value: 1 },
-  { name: 'M', value: 3 },
-  { name: 'T', value: 1 },
-  { name: 'W', value: 4 },
-  { name: 'T', value: 2 },
-  { name: 'F', value: 3 },
-  { name: 'S', value: 5 },
+const dailyMoodData = [
+  { name: 'S', mood: 1 }, // 1 = Sad
+  { name: 'M', mood: 3 }, // 3 = Neutral
+  { name: 'T', mood: 1 }, // 1 = Sad
+  { name: 'W', mood: 4 }, // 4 = Happy
+  { name: 'T', mood: 2 }, // 2 = Anxious
+  { name: 'F', mood: 3 }, // 3 = Neutral
+  { name: 'S', mood: 5 }, // 5 = Ecstatic
 ];
 
-const monthlyMentors = [
+const moodDistribution = [
+  { name: 'Happy', value: 40, color: '#5A9CA4' }, // Blue
+  { name: 'Neutral', value: 25, color: '#D3D3D3' }, // Light Gray
+  { name: 'Anxious', value: 15, color: '#5A9CA4' }, // Blue
+  { name: 'Sad', value: 20, color: '#22223B' }, // Dark Blue/Black
+];
+
+const journalEntries = [
   {
-    name: 'Curious George',
-    role: 'UI UX Design',
-    tasks: 40,
-    rating: 4.7,
-    reviews: 750,
-    avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026702d',
-    status: 'Follow',
+    title: 'Morning Reflections',
+    summary: 'The sunny weather and a good night\'s sleep contributed to a feeling of happiness and calm.',
+    mood: 'Happy',
+    tips: 'Try to get some sun exposure to boost your mood!',
   },
   {
-    name: 'Abraham Lincoln',
-    role: '3D Design',
-    tasks: 32,
-    rating: 4.9,
-    reviews: 510,
-    avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026703d',
-    status: 'Followed',
+    title: 'Afternoon Struggles',
+    summary: 'Felt stressed after a challenging meeting. Noticed feelings of frustration.',
+    mood: 'Anxious',
+    tips: 'Consider a 5-minute mindfulness exercise to recenter yourself.',
   },
 ];
 
-const upcomingTasks = [
-  {
-    title: 'Creating Mobile App Design',
-    role: 'UI UX Design',
-    progress: 75,
-    daysLeft: 3,
-    image: 'https://images.unsplash.com/photo-1518770660439-46061ec4bb0f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80', // Placeholder
-  },
-  {
-    title: 'Creating Perfect Website',
-    role: 'Web Developer',
-    progress: 85,
-    daysLeft: 4,
-    image: 'https://images.unsplash.com/photo-1542831371-29b0f74f9713?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80', // Placeholder
-  },
-];
-
-const todayTask = {
-  title: 'Creating Awesome Mobile Apps',
-  role: 'UI/UX Designer',
-  progress: 90,
-  time: '1 Hour',
-  steps: [
-    'Understanding the tools in Figma',
-    'Understand the basics of making designs',
-    'Design a mobile application with Figma',
-  ],
-  image: 'https://images.unsplash.com/photo-1632575440628-98e3b56a4b13?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80', // Placeholder
-};
+const mainMood = 'Happy';
+const moodScore = 85;
 
 const calendarDates = [
   'July 2025',
   [10, 11, 12, 13, 14, 15, 16], // Mock week
 ];
 
-// const navigationItems = [
-//   { label: 'Overview', icon: '⚡' }, // Placeholder icons
-//   { label: 'Task', icon: '✅' },
-//   { label: 'Mentors', icon: '👤' },
-//   { label: 'Message', icon: '✉️' },
-//   { label: 'Settings', icon: '⚙️' },
-// ];
+const todayTask = {
+  title: 'Mindful Journaling',
+  role: 'Self-Care Activity',
+  progress: 90,
+  time: '15 Minutes',
+  steps: [
+    'Find a quiet space to write',
+    'Reflect on your day\'s emotions',
+    'Categorize your feelings',
+  ],
+  image: 'https://images.unsplash.com/photo-1542831371-29b0f74f9713?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80',
+};
 
-const achievements = [
-  { label: 'First Week Streak', unlocked: true },
-  { label: '10 Happy Entries', unlocked: false },
-  { label: 'Night Owl Journaler', unlocked: false },
-];
-
+const moodColors = {
+  1: '#22223B', // Dark Blue for Sad
+  2: '#5A9CA4', // Blue for Anxious
+  3: '#F6F8F9', // Light Gray for Neutral
+  4: '#5A9CA4', // Blue for Happy
+  5: '#5A9CA4', // Blue for Ecstatic
+};
 
 function Dashboard() {
   return (
-    <Box className="flex bg-[#F8F9FA] min-h-screen">
-      {/* Left Sidebar */}
-      {/* <Box className="w-[200px] bg-white p-4 flex flex-col items-center border-r border-gray-200"> */}
-        {/* <Typography variant="h6" className="font-bold mb-8 text-[#5A9CA4]">Nuegas</Typography> */}
-        {/* <div className="flex flex-col space-y-4 w-full">
-          {navigationItems.map((item, index) => (
-            <div key={index} className="flex items-center space-x-2 text-gray-600 hover:text-[#5A9CA4] cursor-pointer p-2 rounded transition-colors duration-200">
-              <span className="text-xl">{item.icon}</span>
-              <Typography variant="body1">{item.label}</Typography>
-            </div>
-          ))}
-        </div> */}
-        {/* Help Center */}
-        {/* <div className="mt-auto bg-[#22223B] text-white p-4 rounded-lg w-full">
-          <Typography variant="h6" className="text-sm">Help Center</Typography>
-          <Typography variant="body2" className="text-xs mt-1">Having trouble in Learning? Please contact us for more questions.</Typography>
-          <button className="mt-3 text-sm px-3 py-1 rounded-full border border-white">Go To Help Center</button>
-        </div>
-      </Box> */}
-
+    <Box className="flex bg-[#F6F8F9] min-h-screen">
       {/* Main Content */}
       <Box className="flex-1 p-8">
         {/* Header */}
         <Box className="flex justify-between items-center mb-6">
           <Typography variant="h4" className="font-bold text-[#22223B]">
             Hi, {userData.name}
-            <div className="text-sm font-normal text-gray-500">Let's finish your task today!</div>
+            <div className="text-sm font-normal text-gray-500">Let's check in on your mood today!</div>
           </Typography>
           <Box className="flex items-center space-x-4">
             <IconButton><img src="https://i.pravatar.cc/40?u=skylar" alt="Profile" className="rounded-full w-10 h-10" /></IconButton>
@@ -143,63 +91,61 @@ function Dashboard() {
 
         {/* Top Panels */}
         <Grid container spacing={4} className="mb-6">
-          {/* Running Task */}
+          {/* Daily Mood Summary */}
           <Grid item xs={12} sm={6} md={3}>
-            <Paper className="p-4 bg-[#22223B] text-white rounded-lg h-full">
-              <Typography variant="h6" className="text-sm">Running Task</Typography>
-              <div className="flex items-center mt-2">
-                <Typography variant="h3" className="font-bold">{runningTask.completed}</Typography>
-                <div className="ml-2">
-                  <Typography variant="h6" className="font-bold text-gray-400">{runningTask.total}</Typography>
-                  <Typography variant="body2" className="text-gray-400">Task</Typography>
+            <Paper className="p-6 bg-[#22223B] text-white rounded-xl h-full shadow-lg">
+              <Typography variant="h6" className="text-sm">Today's Mood</Typography>
+              <div className="flex items-center mt-3">
+                <Typography variant="h3" className="font-bold">{mainMood}</Typography>
+                <div className="ml-4">
+                  <Typography variant="h6" className="font-bold text-gray-400">{moodScore}%</Typography>
+                  <Typography variant="body2" className="text-gray-400">Confidence</Typography>
                 </div>
               </div>
               <LinearProgress
                 variant="determinate"
-                value={(runningTask.completed / runningTask.total) * 100}
+                value={moodScore}
                 sx={{
-                  bgcolor: '#5A9CA4',
-                  '& .MuiLinearProgress-bar': { bgcolor: '#F7C873' },
+                  bgcolor: '#D3D3D3',
+                  '& .MuiLinearProgress-bar': { bgcolor: '#5A9CA4' },
                   height: 8,
                   borderRadius: 5,
-                  mt: 2,
+                  mt: 3,
                 }}
               />
             </Paper>
           </Grid>
-          {/* Activity Chart */}
+          {/* Weekly Mood Chart */}
           <Grid item xs={12} sm={6} md={5}>
-            <Paper className="p-4 rounded-lg h-full">
-              <div className="flex justify-between items-center mb-2">
-                <Typography variant="h6" className="text-sm">Activity</Typography>
+            <Paper className="p-6 rounded-xl h-full shadow-lg">
+              <div className="flex justify-between items-center mb-3">
+                <Typography variant="h6" className="text-sm">Weekly Mood Trends</Typography>
                 <div className="flex items-center space-x-2">
                   <Typography variant="body2" className="text-gray-500">This Week</Typography>
                   <ArrowBackIosNewIcon sx={{ fontSize: 10, color: 'gray' }} />
                   <ArrowForwardIosIcon sx={{ fontSize: 10, color: 'gray' }} />
                 </div>
               </div>
-              <div className="w-full h-24">
+              <div className="w-full h-36">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={activityData}>
+                  <BarChart data={dailyMoodData}>
                     <XAxis dataKey="name" axisLine={false} tickLine={false} />
-                    <YAxis axisLine={false} tickLine={false} />
-                    <Tooltip />
-                    <Line
-                      type="monotone"
-                      dataKey="value"
-                      stroke="#5A9CA4"
-                      strokeWidth={2}
-                      dot={{ fill: '#F7C873', stroke: '#5A9CA4', strokeWidth: 2, r: 4 }}
-                    />
-                  </LineChart>
+                    <YAxis domain={[0, 5]} axisLine={false} tickLine={false} />
+                    <Tooltip cursor={{ fill: 'transparent' }} />
+                    <Bar dataKey="mood" barSize={20}>
+                      {dailyMoodData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={moodColors[entry.mood]} />
+                      ))}
+                    </Bar>
+                  </BarChart>
                 </ResponsiveContainer>
               </div>
             </Paper>
           </Grid>
           {/* Calendar */}
           <Grid item xs={12} md={4}>
-            <Paper className="p-4 rounded-lg h-full">
-              <div className="flex justify-between items-center mb-2">
+            <Paper className="p-6 rounded-xl h-full shadow-lg">
+              <div className="flex justify-between items-center mb-3">
                 <Typography variant="h6" className="text-sm text-gray-500">{calendarDates[0]}</Typography>
                 <div className="flex items-center space-x-2">
                   <ArrowBackIosNewIcon sx={{ fontSize: 10, color: 'gray' }} />
@@ -213,12 +159,11 @@ function Dashboard() {
                   </Grid>
                 ))}
               </Grid>
-              <Grid container spacing={1} className="mt-1">
+              <Grid container spacing={1} className="mt-2">
                 {calendarDates[1].map((date, index) => (
                   <Grid item xs={1.7} key={index} className="text-center">
                     <div
-                      className={`w-8 h-8 rounded-full flex items-center justify-center cursor-pointer ${date === 16 ? 'bg-[#5A9CA4] text-white' : 'hover:bg-gray-100'
-                        }`}
+                      className={`w-8 h-8 rounded-full flex items-center justify-center cursor-pointer ${date === 16 ? 'bg-[#5A9CA4] text-white' : 'hover:bg-gray-100'}`}
                     >
                       <Typography variant="body2">{date}</Typography>
                     </div>
@@ -231,54 +176,56 @@ function Dashboard() {
 
         {/* Second Row Panels */}
         <Grid container spacing={4} className="mb-6">
-          {/* Monthly Mentors */}
+          {/* Emotion Distribution Pie Chart */}
           <Grid item xs={12} md={8}>
-            <Paper className="p-4 rounded-lg">
+            <Paper className="p-6 rounded-xl shadow-lg">
               <div className="flex justify-between items-center mb-4">
-                <Typography variant="h6" className="text-sm">Monthly Mentors</Typography>
+                <Typography variant="h6" className="text-sm">Emotion Distribution</Typography>
                 <div className="flex items-center space-x-2">
                   <IconButton size="small"><ArrowBackIosNewIcon sx={{ fontSize: 14 }} /></IconButton>
                   <IconButton size="small"><ArrowForwardIosIcon sx={{ fontSize: 14 }} /></IconButton>
                 </div>
               </div>
-              <div className="flex space-x-4 overflow-x-auto pb-2">
-                {monthlyMentors.map((mentor, index) => (
-                  <Paper key={index} className="flex-none p-4 w-48 bg-[#F7F7F7] rounded-lg">
-                    <div className="flex items-center justify-center">
-                      <Avatar src={mentor.avatar} alt={mentor.name} className="w-12 h-12" />
+              <div className="flex items-center justify-center space-x-8">
+                <PieChart width={150} height={150}>
+                  <Pie
+                    data={moodDistribution}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={60}
+                    fill="#8884d8"
+                    labelLine={false}
+                  >
+                    {moodDistribution.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+                <div className="flex flex-col space-y-2">
+                  {moodDistribution.map((mood, index) => (
+                    <div key={index} className="flex items-center space-x-2">
+                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: mood.color }}></div>
+                      <Typography variant="body2">{mood.name} ({mood.value}%)</Typography>
                     </div>
-                    <div className="text-center mt-2">
-                      <Typography variant="subtitle1" className="font-bold text-sm">{mentor.name}</Typography>
-                      <Typography variant="body2" className="text-gray-500 text-xs">{mentor.role}</Typography>
-                    </div>
-                    <div className="flex justify-between mt-2 text-xs text-gray-600">
-                      <Typography variant="body2">{mentor.tasks} Task</Typography>
-                      <Typography variant="body2">{mentor.rating} ({mentor.reviews} Reviews)</Typography>
-                    </div>
-                    <button className="mt-3 w-full text-sm px-3 py-1 rounded-full border border-gray-400 hover:bg-gray-200">
-                      {mentor.status}
-                    </button>
-                  </Paper>
-                ))}
+                  ))}
+                </div>
               </div>
             </Paper>
           </Grid>
-          {/* Task Today */}
+          {/* Current Journal Activity */}
           <Grid item xs={12} md={4}>
-            <Paper className="p-4 rounded-lg">
-              <div className="flex justify-between items-center mb-2">
-                <Typography variant="h6" className="text-sm">Task Today</Typography>
+            <Paper className="p-6 rounded-xl h-full shadow-lg">
+              <div className="flex justify-between items-center mb-3">
+                <Typography variant="h6" className="text-sm">Today's Journaling</Typography>
                 <MoreHorizIcon sx={{ color: 'gray' }} />
               </div>
               <div className="relative">
-                <img src={todayTask.image} alt="Task" className="w-full h-32 object-cover rounded-lg" />
-                <div className="absolute top-2 right-2 flex space-x-1">
-                  {/* Mock tags */}
-                  <span className="bg-white/80 text-xs px-2 py-1 rounded-lg">Design</span>
-                  <span className="bg-white/80 text-xs px-2 py-1 rounded-lg">UI/UX</span>
-                </div>
+                <img src={todayTask.image} alt="Journal" className="w-full h-32 object-cover rounded-xl" />
               </div>
-              <Typography variant="subtitle1" className="font-bold mt-2">{todayTask.title}</Typography>
+              <Typography variant="subtitle1" className="font-bold mt-3">{todayTask.title}</Typography>
               <Typography variant="body2" className="text-gray-500 text-sm mb-2">{todayTask.role}</Typography>
               <div className="flex items-center justify-between">
                 <Typography variant="body2" className="text-sm">Progress</Typography>
@@ -288,7 +235,7 @@ function Dashboard() {
                 variant="determinate"
                 value={todayTask.progress}
                 sx={{
-                  bgcolor: '#e0e0e0',
+                  bgcolor: '#D3D3D3',
                   '& .MuiLinearProgress-bar': { bgcolor: '#5A9CA4' },
                   height: 6,
                   borderRadius: 5,
@@ -300,72 +247,46 @@ function Dashboard() {
                   <CalendarTodayIcon sx={{ fontSize: 14 }} />
                   <Typography variant="body2">{todayTask.time}</Typography>
                 </div>
-                {/* Mock user avatars */}
-                <div className="flex -space-x-2">
-                  <Avatar src="https://i.pravatar.cc/40?u=user1" sx={{ width: 24, height: 24, border: '2px solid white' }} />
-                  <Avatar src="https://i.pravatar.cc/40?u=user2" sx={{ width: 24, height: 24, border: '2px solid white' }} />
-                  <Avatar src="https://i.pravatar.cc/40?u=user3" sx={{ width: 24, height: 24, border: '2px solid white' }} />
-                </div>
               </div>
             </Paper>
           </Grid>
         </Grid>
 
-        {/* Upcoming Tasks Section */}
+        {/* Instant Insights Section */}
         <Box>
           <div className="flex justify-between items-center mb-4">
-            <Typography variant="h6" className="text-sm">Upcoming Task</Typography>
+            <Typography variant="h6" className="text-sm">Instant Insights</Typography>
             <div className="flex items-center space-x-2">
               <IconButton size="small"><ArrowBackIosNewIcon sx={{ fontSize: 14 }} /></IconButton>
               <IconButton size="small"><ArrowForwardIosIcon sx={{ fontSize: 14 }} /></IconButton>
             </div>
           </div>
-          <div className="flex space-x-4 overflow-x-auto pb-2">
-            {upcomingTasks.map((task, index) => (
-              <Paper key={index} className="flex-none p-4 w-64 rounded-lg">
-                <img src={task.image} alt={task.title} className="w-full h-24 object-cover rounded-lg" />
-                <Typography variant="subtitle1" className="font-bold mt-2">{task.title}</Typography>
-                <Typography variant="body2" className="text-gray-500 text-sm">{task.role}</Typography>
-                <div className="flex items-center justify-between mt-2">
-                  <Typography variant="body2" className="text-sm">Progress</Typography>
-                  <Typography variant="body2" className="font-bold text-sm text-[#5A9CA4]">{task.progress}%</Typography>
+          <div className="flex space-x-6 overflow-x-auto pb-2 hide-scrollbar">
+            {journalEntries.map((entry, index) => (
+              <Paper key={index} className="flex-none p-6 w-64 rounded-xl shadow-md bg-[#F0F0F0]">
+                <Typography variant="subtitle1" className="font-bold text-sm">{entry.title}</Typography>
+                <Typography variant="body2" className="text-gray-600 mt-2">{entry.summary}</Typography>
+                <div className="mt-3 text-xs">
+                  <span className={`px-2 py-1 rounded-full text-white ${entry.mood === 'Happy' ? 'bg-[#5A9CA4]' : 'bg-[#22223B]'}`}>{entry.mood}</span>
                 </div>
-                <LinearProgress
-                  variant="determinate"
-                  value={task.progress}
-                  sx={{
-                    bgcolor: '#e0e0e0',
-                    '& .MuiLinearProgress-bar': { bgcolor: '#5A9CA4' },
-                    height: 6,
-                    borderRadius: 5,
-                    mt: 1,
-                  }}
-                />
-                <div className="flex items-center mt-2 text-sm text-gray-500">
-                  <CalendarTodayIcon sx={{ fontSize: 14 }} />
-                  <Typography variant="body2" className="ml-1">{task.daysLeft} Days Left</Typography>
-                </div>
+                <Typography variant="body2" className="text-gray-500 mt-2 italic">Tip: {entry.tips}</Typography>
               </Paper>
             ))}
           </div>
         </Box>
       </Box>
 
-      {/* Right Sidebar (Task Today Details) */}
-      <Box className="w-[300px] bg-white p-4 flex flex-col border-l border-gray-200">
+      {/* Right Sidebar (Journaling Details) */}
+      <Box className="w-[300px] bg-white p-6 flex flex-col border-l border-gray-200">
         <div className="flex justify-between items-center mb-4">
-          <Typography variant="h6" className="text-sm">Task Today</Typography>
+          <Typography variant="h6" className="text-sm">Journaling Today</Typography>
           <MoreHorizIcon sx={{ color: 'gray' }} />
         </div>
         <div className="relative mb-4">
-          <img src={todayTask.image} alt="Task" className="w-full h-32 object-cover rounded-lg" />
-          <div className="absolute top-2 right-2 flex space-x-1">
-            <span className="bg-white/80 text-xs px-2 py-1 rounded-lg">Design</span>
-            <span className="bg-white/80 text-xs px-2 py-1 rounded-lg">UI/UX</span>
-          </div>
+          <img src={todayTask.image} alt="Journaling" className="w-full h-32 object-cover rounded-xl" />
         </div>
         <Typography variant="h6" className="font-bold">{todayTask.title}</Typography>
-        <Typography variant="body2" className="text-gray-500 mb-2">{todayTask.role}</Typography>
+        <Typography variant="body2" className="text-gray-500 mb-3">{todayTask.role}</Typography>
 
         <div className="flex items-center justify-between mb-4">
           <Typography variant="body2">Progress</Typography>
@@ -375,33 +296,22 @@ function Dashboard() {
           variant="determinate"
           value={todayTask.progress}
           sx={{
-            bgcolor: '#e0e0e0',
+            bgcolor: '#D3D3D3',
             '& .MuiLinearProgress-bar': { bgcolor: '#5A9CA4' },
             height: 6,
             borderRadius: 5,
-            mb: 2,
+            mb: 3,
           }}
         />
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center space-x-1 text-gray-500">
-            <CalendarTodayIcon sx={{ fontSize: 14 }} />
-            <Typography variant="body2">{todayTask.time}</Typography>
-          </div>
-          <div className="flex -space-x-2">
-            <Avatar src="https://i.pravatar.cc/40?u=user1" sx={{ width: 24, height: 24, border: '2px solid white' }} />
-            <Avatar src="https://i.pravatar.cc/40?u=user2" sx={{ width: 24, height: 24, border: '2px solid white' }} />
-            <Avatar src="https://i.pravatar.cc/40?u=user3" sx={{ width: 24, height: 24, border: '2px solid white' }} />
-          </div>
-        </div>
 
-        <div className="mt-auto">
-          <Typography variant="subtitle1" className="font-bold mb-2">Detail Task</Typography>
+        <div className="mt-auto pt-6">
+          <Typography variant="subtitle1" className="font-bold mb-3">How to Journal</Typography>
           <ol className="list-decimal pl-5">
             {todayTask.steps.map((step, index) => (
               <li key={index} className="text-sm text-gray-700 mb-1">{step}</li>
             ))}
           </ol>
-          <button className="mt-4 w-full bg-[#5A9CA4] text-white py-2 rounded-lg hover:bg-[#5A9CA4]/80">Go To Detail</button>
+          <button className="mt-4 w-full bg-[#5A9CA4] text-white py-2 rounded-lg hover:bg-[#5A9CA4]/80">Go To Journal</button>
         </div>
       </Box>
     </Box>

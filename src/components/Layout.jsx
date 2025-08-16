@@ -33,51 +33,69 @@ export default function Layout({ children }) {
   return (
     <ThemeProvider theme={theme}>
       <div className="min-h-screen bg-[#F6F8F9] flex">
-        <Drawer
-          variant="permanent"
-          anchor="left"
-          sx={{
+       <Drawer
+        variant="permanent"
+        anchor="left"
+        sx={{
+          width: 220,
+          flexShrink: 0,
+          '& .MuiDrawer-paper': {
             width: 220,
-            flexShrink: 0,
-            '& .MuiDrawer-paper': {
-              width: 220,
-              boxSizing: 'border-box',
-              bgcolor: 'white',
-              color: '#F6F8F9',
-            },
-          }}
-        >
-          <Toolbar>
-            <Typography variant="h6" sx={{ color: '#F6F8F9' }}>MoodMate</Typography>
-          </Toolbar>
-          <List>
-            {navLinks.map(link => {
-              const selected = location.pathname === link.path
-              return (
-                <ListItem
-                  button
-                  key={link.path}
-                  component={Link}
-                  to={link.path}
-                  sx={{
-                    bgcolor: selected ? 'secondary.main' : undefined,
-                    color: selected ? 'text.primary' : '#F6F8F9',
-                    '&:hover': {
-                      bgcolor: 'error.main',
-                      color: 'text.primary',
-                    },
-                  }}
-                >
-                  <ListItemText primary={link.label} />
-                </ListItem>
-              )
-            })}
-            {/* Crisis Support Button */}
-            <ListItem button sx={{ mt: 2, bgcolor: '#ECA7A7', color: '#22223B', borderRadius: 2 }} onClick={() => setOpen(true)}>
-              <ListItemText primary="Crisis Support" />
-            </ListItem>
-          </List>
-        </Drawer>
+            boxSizing: 'border-box',
+            bgcolor: 'white', // Set sidebar to white
+            color: '#22223B', // Set default text color
+          },
+        }}
+      >
+        <Toolbar>
+          <Typography variant="h6" className="font-bold text-[#22223B]">MoodMate</Typography>
+        </Toolbar>
+        <List>
+          {navLinks.map(link => {
+            const selected = location.pathname === link.path
+            return (
+              <ListItem
+                button
+                key={link.path}
+                component={Link}
+                to={link.path}
+                sx={{
+                  bgcolor: selected ? '#C4E2E6' : 'transparent',
+                  color: '#22223B',
+                  borderRadius: 1,
+                  mx: 1,
+                  my: 0.5,
+                  '&:hover': {
+                    bgcolor: '#A3D4DB', // A slightly darker blue for hover
+                    color: '#22223B',
+                  },
+                }}
+              >
+                <ListItemText primary={link.label} />
+              </ListItem>
+            )
+          })}
+          {/* Crisis Support Button */}
+          <ListItem
+            button
+            sx={{
+              mt: 2,
+              bgcolor: '#22223B',
+              color: 'white',
+              borderRadius: 2,
+              mx: 1,
+              '&:hover': {
+                bgcolor: '#5A9CA4', // Accent blue on hover
+                color: 'white',
+              },
+            }}
+            onClick={() => setOpen(true)}
+          >
+            <ListItemText primary="Crisis Support" />
+          </ListItem>
+        </List>
+      </Drawer>
+
         <main className="pt-8 flex-1">
           {children}
           {/* Quick Mood Entry Floating Button */}
