@@ -42,7 +42,7 @@ export default function Layout({ children }) {
             '& .MuiDrawer-paper': {
               width: 220,
               boxSizing: 'border-box',
-              bgcolor: 'primary.main',
+              bgcolor: 'white',
               color: '#F6F8F9',
             },
           }}
