@@ -78,6 +78,7 @@ const moodColors = {
   4: '#5A9CA4', // Blue for Happy
   5: '#5A9CA4', // Blue for Ecstatic
 };
+const MOOD_SHOWN_KEY = 'moodDialogShown';
 
 const moodOptions = [
   { label: 'Ecstatic', value: 5, icon: <SentimentVerySatisfiedIcon sx={{ color: '#5A9CA4', fontSize: 40 }} /> },
@@ -88,7 +89,10 @@ const moodOptions = [
 ];
 
 function Dashboard() {
-  const [moodDialogOpen, setMoodDialogOpen] = useState(true);
+  const [moodDialogOpen, setMoodDialogOpen] = useState(() => {
+  return localStorage.getItem(MOOD_SHOWN_KEY) !== 'true';
+});
+
   const [selectedMood, setSelectedMood] = useState(null);
   const setMood = useMoodStore(state => state.setMood);
 
@@ -121,7 +125,11 @@ function Dashboard() {
             <button
               className={`px-6 py-2 rounded-lg font-semibold text-white bg-[#5A9CA4] hover:bg-[#F7C873] hover:text-[#22223B] transition ${!selectedMood ? 'opacity-50 cursor-not-allowed' : ''}`}
               disabled={!selectedMood}
-              onClick={() => setMoodDialogOpen(false)}
+              onClick={() => {
+  localStorage.setItem(MOOD_SHOWN_KEY, 'true');
+  setMoodDialogOpen(false);
+}}
+
             >
               Confirm
             </button>
